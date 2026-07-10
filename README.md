@@ -29,6 +29,9 @@ Default local config:
 QWEN_MODEL_PATH=/Users/oswaldohernandez/local-ai-workspace/models/qwen2.5-3b/qwen2.5-3b-instruct-q5_k_m.gguf
 QWEN_CONTEXT_SIZE=4096
 QWEN_THREADS=4
+QWEN_MAX_TOKENS=256
+WEB_CONTEXT_MAX_CHARS=6000
+PROJECT_CONTEXT_MAX_CHARS=7000
 LOCAL_LLM_BASE_URL=http://127.0.0.1:8080/v1
 LOCAL_LLM_MODEL=qwen-local
 LOCAL_LLM_API_KEY=local
@@ -65,6 +68,9 @@ Optional tuning:
 ```bash
 export QWEN_CONTEXT_SIZE=4096
 export QWEN_THREADS=4
+QWEN_MAX_TOKENS=256
+WEB_CONTEXT_MAX_CHARS=6000
+PROJECT_CONTEXT_MAX_CHARS=7000
 export LOCAL_LLM_HOST=127.0.0.1
 export LOCAL_LLM_PORT=8080
 ```
@@ -123,6 +129,20 @@ Defaults:
 - `LOCAL_LLM_API_KEY=local`
 - `AGENTSCOPE_PORT=10001`
 
+## CLI Usage
+
+The CLI is the Java equivalent of the Python MVP commands. The local model server must be running first.
+
+```bash
+./scripts/assistant.sh chat "Explain what Snowflake is"
+./scripts/assistant.sh ask "Is Aaron Judge injured right now?"
+./scripts/assistant.sh search "Who is Aaron Judge?"
+./scripts/assistant.sh search-answer "Who is Aaron Judge?"
+./scripts/assistant.sh project-answer "Explain this project"
+```
+
+For `project-answer`, run `assistant.sh` from the project you want to inspect. The script captures that directory as `PROJECT_READER_ROOT`. You can also set `PROJECT_READER_ROOT=/path/to/project` explicitly.
+
 ## 4. Test AgentScope A2A
 
 ```bash
@@ -163,15 +183,18 @@ mvn test
 
 ## Current Features
 
+- CLI commands: `chat`, `ask`, `search`, `search-answer`, and `project-answer`.
+- Local model client for OpenAI-compatible endpoints.
 - AgentScope Runtime Java A2A server.
 - Agent handler using official AgentScope abstractions.
 - ReAct agent backed by a local OpenAI-compatible Qwen endpoint.
+- Web search RAG with model-generated search queries.
+- Project file reader RAG.
+- Local `.env` configuration.
 - In-memory state, session history, and memory services.
 - System prompt that answers in the same language as the user.
 
 ## Not Implemented Yet
 
-- CLI commands like `chat`, `search-answer`, and `project-answer`.
-- Web search RAG.
-- Project file reader RAG.
 - Direct GGUF loading inside the JVM. The current local path uses `llama_cpp.server` as the model runtime.
+- Full AgentScope tools wired into `Toolkit`; current CLI pipelines run as regular Java services.

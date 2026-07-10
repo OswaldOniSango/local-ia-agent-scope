@@ -1,5 +1,6 @@
 package dev.oswaldo.localai;
 
+import dev.oswaldo.localai.config.AppConfig;
 import io.agentscope.core.ReActAgent;
 import io.agentscope.core.agent.EventType;
 import io.agentscope.core.agent.StreamOptions;
@@ -156,26 +157,14 @@ public class LocalAiAgentHandler extends AgentScopeAgentHandler {
     }
 
     private String resolveBaseUrl() {
-        String baseUrl = System.getenv("LOCAL_LLM_BASE_URL");
-        if (baseUrl == null || baseUrl.isBlank()) {
-            return DEFAULT_BASE_URL;
-        }
-        return baseUrl;
+        return AppConfig.value("LOCAL_LLM_BASE_URL", DEFAULT_BASE_URL);
     }
 
     private String resolveApiKey() {
-        String apiKey = System.getenv("LOCAL_LLM_API_KEY");
-        if (apiKey == null || apiKey.isBlank()) {
-            return DEFAULT_API_KEY;
-        }
-        return apiKey;
+        return AppConfig.value("LOCAL_LLM_API_KEY", DEFAULT_API_KEY);
     }
 
     private String resolveModelName() {
-        String model = System.getenv("LOCAL_LLM_MODEL");
-        if (model == null || model.isBlank()) {
-            return DEFAULT_MODEL;
-        }
-        return model;
+        return AppConfig.value("LOCAL_LLM_MODEL", DEFAULT_MODEL);
     }
 }
